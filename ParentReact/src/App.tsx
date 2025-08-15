@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Rob } from "./Rob";
 
 export default function App() {
   const svelteIFrameRef = React.useRef<HTMLIFrameElement>(null);
@@ -62,6 +63,7 @@ export default function App() {
         </button>
       </div>
 
+      <Rob />
       <iframe
         ref={svelteIFrameRef}
         src="http://localhost:5174"

@@ -6,12 +6,23 @@
   let intervalVal = $state($intervalCounter);
   let clickVal = $state($clickCounter);
 
-  const counter = readable(0, (_, update) => {
+  const counter = readable(0, (set, update) => {
     setInterval(() => {
       update((prev) => prev + 1);
       window.parent.postMessage({ type: "count_update", value: $counter }, "*");
-    }, 500);
+    }, 2000);
+
+    // we won't add an event listener per readable/writable, but we'll need a way to match events with corresponding function calls/params
+    window.addEventListener("message", (event) => {
+      if (event.data?.type === "randomize") {
+        set(event.data?.value);
+      }
+    });
   });
+
+  counter.subscribe((v) =>
+    window.parent.postMessage({ type: "count_update", value: v }, "*"),
+  );
 
   intervalCounter.subscribe((val) => {
     intervalVal = val;

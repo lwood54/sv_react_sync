@@ -1,11 +1,13 @@
 import * as React from 'react';
 
-let state = 0
+let state = {
+  count: 0
+}
 let listeners: Array<() => void> = []
 
 const myStore = {
   updateCount(newValue: number) {
-    state = newValue;
+    state = { ...state, count: newValue }
     emit();
   },
   subscribe(_listener: () => void) {
@@ -31,6 +33,17 @@ function handleMessage(event: MessageEvent) {
     myStore.updateCount(event.data.value)
   }
 }
+
+// an example of function calling
+function randomizeValue() {
+  const svelteFrame: HTMLIFrameElement | null = document.querySelector('#svelte-frame');
+  if (!svelteFrame) {
+    return;
+  }
+  svelteFrame.contentWindow?.postMessage({ type: 'randomize', value: Math.floor(Math.random() * 100) }, "*");
+  // emit();
+}
+
 export const useSvelteStore = () => {
   const store = React.useSyncExternalStore(myStore.subscribe, myStore.getSnap)
 
@@ -39,5 +52,8 @@ export const useSvelteStore = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, [])
 
-  return { store };
+  return {
+    count: store.count,
+    randomizeValue,
+  };
 }

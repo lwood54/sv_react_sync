@@ -69,6 +69,7 @@ export default function App() {
         src="http://localhost:5174"
         style={{ width: "800px", height: "400px", border: "1px solid black" }}
         title="Svelte App"
+        id="svelte-frame"
       />
     </div>
   );
